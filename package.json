@@ -15,7 +15,7 @@
     "services:stop": "docker compose -f infra/compose.yaml stop",
     "services:down": "docker compose -f infra/compose.yaml down"
   },
-  "author": "",
+  "author": "DEV Thiago Vieira",
   "license": "MIT",
   "dependencies": {
     "@vercel/analytics": "^1.0.0",

@@ -1,10 +1,11 @@
 import database from "infra/database.js";
 
 async function status(request, response) {
-  const result = await database.query("SELECT 1 + 1;");
-  console.log(result.rows);
+  const updatedAt = new Date().toISOString();
+  const dbStatus = await database.status();
   response.status(200).json({
-    message: "Hello, World!",
+    updated_at: updatedAt,
+    database: dbStatus,
   });
 }
 
