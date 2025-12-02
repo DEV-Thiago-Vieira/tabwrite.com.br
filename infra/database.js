@@ -15,15 +15,20 @@ async function query(queryObject) {
 }
 
 async function status() {
-  const version = await query("SHOW server_version;");
-  const maxConnections = await query("SHOW max_connections;");
-  const usedConnections = await query("SELECT COUNT(*) FROM pg_stat_activity;");
+  const versionRow = await query("SHOW server_version;");
+  const versionValue = versionRow.rows[0].server_version;
+  const maxConnectionsRow = await query("SHOW max_connections;");
+  const maxConnectionsValue = Number(maxConnectionsRow.rows[0].max_connections);
+  const usedConnectionsRow = await query(
+    "SELECT COUNT(*) FROM pg_stat_activity;",
+  );
+  const usedConnectionsValue = Number(usedConnectionsRow.rows[0].count);
 
   return {
     name: "PostgreSQL",
-    version: version.rows[0].server_version,
-    max_connections: maxConnections.rows[0].max_connections,
-    used_connections: usedConnections.rows[0].count,
+    version: versionValue,
+    max_connections: maxConnectionsValue,
+    used_connections: usedConnectionsValue,
   };
 }
 
