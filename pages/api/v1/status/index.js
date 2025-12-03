@@ -7,7 +7,6 @@ async function status(request, response) {
     updated_at: updatedAt,
     database: dbStatus,
   });
-  console.log(dbStatus);
 }
 
 export default status;

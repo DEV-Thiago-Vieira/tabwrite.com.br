@@ -7,10 +7,10 @@ test("GET to /api/v1/status should return 200", async () => {
   expect(responseBody.database.name).toBeDefined();
   expect(responseBody.database.version).toBeDefined();
   expect(responseBody.database.max_connections).toBeDefined();
-  expect(responseBody.database.used_connections).toBeDefined();
+  expect(responseBody.database.used_connections).toEqual(1);
 
   const parsedDate = new Date(responseBody.updated_at).toISOString();
 
   expect(responseBody.updated_at).toEqual(parsedDate);
-  expect(Number(responseBody.database.max_connections)).toBe(100);
+  expect(responseBody.database.max_connections).toEqual(100);
 });
