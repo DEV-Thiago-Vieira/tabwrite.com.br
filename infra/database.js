@@ -9,20 +9,31 @@ async function query(queryObject) {
     password: process.env.POSTGRES_PASSWORD,
   });
   await client.connect();
-  const result = await client.query(queryObject);
-  await client.end();
-  return result;
+  try {
+    const result = await client.query(queryObject);
+    return result;
+  } catch (error) {
+    console.log(error);
+  } finally {
+    await client.end();
+  }
 }
 
 async function status() {
   const versionRow = await query("SHOW server_version;");
   const versionValue = versionRow.rows[0].server_version;
+
   const maxConnectionsRow = await query("SHOW max_connections;");
   const maxConnectionsValue = Number(maxConnectionsRow.rows[0].max_connections);
-  const usedConnectionsRow = await query(
-    "SELECT COUNT(*) FROM pg_stat_activity;",
-  );
-  const usedConnectionsValue = Number(usedConnectionsRow.rows[0].count);
+
+  const databaseName = process.env.POSTGRES_DB;
+  const usedConnectionsRow = await query({
+    text: "SELECT COUNT(*)::int FROM pg_stat_activity WHERE datname = $1;",
+    values: [databaseName],
+  });
+  const usedConnectionsValue = usedConnectionsRow.rows[0].count;
+
+  console.log(usedConnectionsValue);
 
   return {
     name: "PostgreSQL",
